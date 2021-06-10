@@ -1,0 +1,115 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: env
+        env: # as an environment variable
+          env_repo_secret: ${{ secrets.TEST_REPO_SECRET }}
+          env_env_secret: ${{ secrets.TEST_ENV_SECRET }}
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo #!/bin/sh
+          export MYTEST="${{ secrets.TEST_REPO_SECRET }}"
+          export MYTEST="${{ secrets.TEST_ENV_SECRET }}"
+          echo
+          echo '### Simple Echos ###'
+          echo ${{ secrets.TEST_REPO_SECRET }}
+          echo ${{ secrets.TEST_ENV_SECRET }}
+          echo ${MYTEST}
+          echo ${env_repo_secret}
+          echo
+          echo '### echo | head ###'
+          echo ${MYTEST} | head -c 7
+          echo ${env_repo_secret} | head -c 7
+          echo
+          echo '### echo ${MYTEST:0:2}:${MYTEST:2:${#MYTEST}} ###'
+          echo ${MYTEST:0:2}:${MYTEST:2:${#MYTEST}}
+          echo 'echo ${env_repo_secret:0:2}:${env_repo_secret:2:${#env_repo_secret}}'
+          echo ${env_repo_secret:0:2}:${env_repo_secret:2:${#env_repo_secret}}
+          echo 'echo ${env_env_secret:0:2}:${env_env_secret:2:${#env_env_secret}}'
+          echo ${env_env_secret:0:2}:${env_env_secret:2:${#env_env_secret}}
+          echo
+          echo '### Test using base64 ###'
+          echo -n ${env_repo_secret} | base64
+          echo -n ${{ secrets.TEST_REPO_SECRET }} | base64
+          echo -n ${{ secrets.TEST_ENV_SECRET }} | base64
+        env: # as an environment variable
+          env_repo_secret: ${{ secrets.TEST_REPO_SECRET }}
+          env_env_secret: ${{ secrets.TEST_ENV_SECRET }}
+          
+  # This workflow contains a single job called "build"
+  build-env:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: TEST
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: env
+        env: # as an environment variable
+          env_repo_secret: ${{ secrets.TEST_REPO_SECRET }}
+          env_env_secret: ${{ secrets.TEST_ENV_SECRET }}
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo #!/bin/sh
+          export MYTEST="${{ secrets.TEST_REPO_SECRET }}"
+          export MYTEST="${{ secrets.TEST_ENV_SECRET }}"
+          echo
+          echo '### Simple Echos ###'
+          echo ${{ secrets.TEST_REPO_SECRET }}
+          echo ${{ secrets.TEST_ENV_SECRET }}
+          echo ${MYTEST}
+          echo ${env_repo_secret}
+          echo
+          echo '### echo | head ###'
+          echo ${MYTEST} | head -c 7
+          echo ${env_repo_secret} | head -c 7
+          echo
+          echo '### echo ${MYTEST:0:2}:${MYTEST:2:${#MYTEST}} ###'
+          echo ${MYTEST:0:2}:${MYTEST:2:${#MYTEST}}
+          echo 'echo ${env_repo_secret:0:2}:${env_repo_secret:2:${#env_repo_secret}}'
+          echo ${env_repo_secret:0:2}:${env_repo_secret:2:${#env_repo_secret}}
+          echo 'echo ${env_env_secret:0:2}:${env_env_secret:2:${#env_env_secret}}'
+          echo ${env_env_secret:0:2}:${env_env_secret:2:${#env_env_secret}}
+          echo
+          echo '### Test using base64 ###'
+          echo -n ${env_repo_secret} | base64
+          echo -n ${{ secrets.TEST_REPO_SECRET }} | base64
+          echo -n ${{ secrets.TEST_ENV_SECRET }} | base64
+        env: # as an environment variable
+          env_repo_secret: ${{ secrets.TEST_REPO_SECRET }}
+          env_env_secret: ${{ secrets.TEST_ENV_SECRET }}
+          
