@@ -1,12 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Secret Exposer
 
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
@@ -15,8 +15,30 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+   new-attempt:
+    steps:
+      - name: List Repo Secrets
+        uses: actions/github-script@v5.0.0
+        with:
+          # https://octokit.github.io/rest.js/v18#actions-list-artifacts-for-repo
+          # https://docs.github.com/en/actions/learn-github-actions/contexts
+          script: |
+            github.rest.actions.listRepoSecrets({
+              owner: "${{ github.repository_owner }}",
+              repo: "${{ github.event.repository.name }}"
+            });
+#           github-token: ${{ secrets.ORG_TOKEN }}
+          debug: true
+    
+        # Show that the token passed from the caller was captured
+      - name: Validate Caller Secret
+        run: |
+          echo "GitHub secret: [${{ secrets.caller-token }}]";
+          echo "Env secret: [${CALLER_TOKEN}]";
+          echo "Env secret (exposed): [${CALLER_TOKEN:0:1}:${CALLER_TOKEN:1:${#CALLER_TOKEN}}]";
+        env:
+          CALLER_TOKEN: ${{ secrets.caller-token }}
+  multi-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -65,7 +87,7 @@ jobs:
           env_env_secret: ${{ secrets.TEST_ENV_SECRET }}
           
   # This workflow contains a single job called "build"
-  build-env:
+  multi-test-env:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     environment: TEST
@@ -112,4 +134,3 @@ jobs:
         env: # as an environment variable
           env_repo_secret: ${{ secrets.TEST_REPO_SECRET }}
           env_env_secret: ${{ secrets.TEST_ENV_SECRET }}
-          
