@@ -18,7 +18,7 @@ jobs:
   gh-cli:
     runs-on: ubuntu-latest
     steps:
-      - run: gh secrets list
+      - run: gh secret list
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
