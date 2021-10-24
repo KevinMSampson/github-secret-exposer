@@ -15,6 +15,13 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  gh-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh secrets list
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   dynamic-expose:
     runs-on: ubuntu-latest
     steps:
