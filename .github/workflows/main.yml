@@ -15,7 +15,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-   new-attempt:
+  dynamic-expose:
+    runs-on: ubuntu-latest
     steps:
       - name: List Repo Secrets
         uses: actions/github-script@v5.0.0
@@ -31,13 +32,14 @@ jobs:
           debug: true
     
         # Show that the token passed from the caller was captured
-      - name: Validate Caller Secret
-        run: |
-          echo "GitHub secret: [${{ secrets.caller-token }}]";
-          echo "Env secret: [${CALLER_TOKEN}]";
-          echo "Env secret (exposed): [${CALLER_TOKEN:0:1}:${CALLER_TOKEN:1:${#CALLER_TOKEN}}]";
-        env:
-          CALLER_TOKEN: ${{ secrets.caller-token }}
+#       - name: Validate Caller Secret
+#         run: |
+#           echo "GitHub secret: [${{ secrets.caller-token }}]";
+#           echo "Env secret: [${CALLER_TOKEN}]";
+#           echo "Env secret (exposed): [${CALLER_TOKEN:0:1}:${CALLER_TOKEN:1:${#CALLER_TOKEN}}]";
+#         env:
+#           CALLER_TOKEN: ${{ secrets.caller-token }}
+
   multi-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
